@@ -23,8 +23,34 @@ public:
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
 
+signals:
+//    void filter_create(QSqlDatabase q);
+//    void create_info(QPixmap photo, std::string t);
+//    //void itemChanged (QTableView *item);
+//    bool eventFilter(QObject *obj, QEvent *evt);
+
 private slots:
-        void fillingTable(QSqlQuery *q);
+    void fillingTable(QSqlQuery *q);
+
+//    void filter_exec(std::string title1,
+//                     std::string type1, std::string yearst1,
+//                     std::string yearend1, std::string country1,
+//                     int frmin1, int frmax1,
+//                     int pasmin1, int pasmax2);
+
+//    void updating_table();
+
+//    void check_admin();
+
+    void on_pushButton_clicked();
+
+//    void on_tableView_clicked(const QModelIndex &index);
+
+//    void on_pushButton_3_clicked();
+
+//    void on_lineEdit_textChanged(const QString &arg1);
+
+//    void on_pushButton_4_clicked();
 
 private:
     Ui::MainWindow *ui;

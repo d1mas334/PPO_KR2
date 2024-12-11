@@ -1,5 +1,6 @@
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
+#include "start.h"
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -22,6 +23,15 @@ MainWindow::MainWindow(QWidget *parent)
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::on_pushButton_clicked()
+{
+    close();
+    Start *s;
+    s = new Start;
+    s->setWindowTitle("Вход в систему");
+    s->show();
 }
 
 void MainWindow::fillingTable(QSqlQuery *q){
@@ -54,19 +64,6 @@ void MainWindow::fillingTable(QSqlQuery *q){
          * */
         ui->tableWidget->setItem(i,0, new QTableWidgetItem(q->value(0).toString()));
 
-        // Создаём элемент, который будет выполнять роль чекбокса
-//        QTableWidgetItem *item = new QTableWidgetItem();
-//        item->data(Qt::CheckStateRole);
-        /* Проверяем, на статус нечетности, если нечетное устройство, то
-         * выставляем состояние чекбокса в Checked, иначе в Unchecked
-         * */
-//        if(q->value(1).toInt() == 1){
-//            item->setCheckState(Qt::Checked);
-//        } else {
-//            item->setCheckState(Qt::Unchecked);
-//        }
-        // Устанавливаем чекбокс во вторую колонку
-//        ui->tableWidget->setItem(i,1, item);
         // Далее забираем все данные из результата запроса и устанавливаем в остальные поля
         ui->tableWidget->setItem(i,1, new QTableWidgetItem(q->value(1).toString()));
         ui->tableWidget->setItem(i,2, new QTableWidgetItem(q->value(2).toString()));
@@ -75,7 +72,7 @@ void MainWindow::fillingTable(QSqlQuery *q){
         ui->tableWidget->setItem(i,5, new QTableWidgetItem(q->value(5).toString()));
     }
     if (i == 0){
-        qDebug()<<"Mistake";
+        qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65";
     }
 }
 
