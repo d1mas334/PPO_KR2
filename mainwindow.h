@@ -11,6 +11,7 @@
 // #include "QSqlTableModel"
 #include "information.h"
 #include "filter.h"
+#include "qtablewidget.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -49,9 +50,13 @@ private slots:
 
     void on_pushButton_3_clicked();
 
-//    void on_lineEdit_textChanged(const QString &arg1);
+    void on_lineEdit_textChanged(const QString &arg1);
 
 //    void on_pushButton_4_clicked();
+
+//    void on_tableWidget_itemChanged(QTableWidgetItem *item);
+
+    void on_tableWidget_itemClicked(QTableWidgetItem *item);
 
 private:
     Ui::MainWindow *ui;

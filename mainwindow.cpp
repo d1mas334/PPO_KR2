@@ -22,6 +22,7 @@ MainWindow::MainWindow(QWidget *parent)
     f.setWindowTitle("Фильтр");
 
     connect(this, SIGNAL(filter_create(QSqlDatabase)), &f, SLOT(creating_filter(QSqlDatabase)));
+//    connect(this, &MainWindow::filter_create, &f, &Filter::creating_filter);
 
     connect(&f, SIGNAL(table_update(std::string,
                                     std::string, std::string,
@@ -96,6 +97,12 @@ void MainWindow::fillingTable(QSqlQuery *q){
     }
 }
 
+void MainWindow::on_lineEdit_textChanged(const QString &arg1)
+{
+    title = ui->lineEdit->text().toStdString();
+    updating_table();
+}
+
 void MainWindow::on_pushButton_3_clicked()
 {
     emit filter_create(db);
@@ -151,4 +158,16 @@ void MainWindow::updating_table(){
     fillingTable(q);
 }
 
+
+void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
+{
+    int ind = item->row();
+    QSqlQuery query = QSqlQuery(db);
+    query.exec(QString::fromStdString("SELECT Название FROM mt1 WHERE id = CONVERT(INT, "
+                                      + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
+    QString str;
+    query.first();
+    str = query.value(0).toString();
+    ui->label_2->setText(str);
+}
 
