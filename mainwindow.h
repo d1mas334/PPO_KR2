@@ -27,7 +27,7 @@ public:
 
 signals:
     void filter_create(QSqlDatabase q);
-//    void create_info(QPixmap photo, std::string t);
+    void create_info(QPixmap photo, std::string t);
 //    //void itemChanged (QTableView *item);
 //    bool eventFilter(QObject *obj, QEvent *evt);
 
@@ -52,7 +52,7 @@ private slots:
 
     void on_lineEdit_textChanged(const QString &arg1);
 
-//    void on_pushButton_4_clicked();
+    void on_pushButton_4_clicked();
 
 //    void on_tableWidget_itemChanged(QTableWidgetItem *item);
 

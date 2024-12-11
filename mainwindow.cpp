@@ -32,6 +32,8 @@ MainWindow::MainWindow(QWidget *parent)
                              std::string, std::string,
                              std::string, std::string,
                              int, int, int, int)));
+
+    connect(this, SIGNAL(create_info(QPixmap, std::string)), &infWindow, SLOT(creating_inf(QPixmap, std::string)));
 }
 
 MainWindow::~MainWindow()
@@ -171,3 +173,21 @@ void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
     ui->label_2->setText(str);
 }
 
+void MainWindow::on_pushButton_4_clicked()
+{
+    qDebug()<<ui->tableWidget->selectionModel()->currentIndex().row();
+    int ind = ui->tableWidget->selectionModel()->currentIndex().row();
+    QSqlQuery query = QSqlQuery(db);
+    query.exec(QString::fromStdString("SELECT Фото FROM mt1 WHERE id = CONVERT(INT, "
+                                                      + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
+    QPixmap photo;
+    query.first();
+    QByteArray arr;
+    //arr.setRawData(query.value(0), QMetaType::sizeOf(query.value(0).ty));
+    if(photo.loadFromData(query.value(0).toByteArray(), "JPG"))
+    {
+        std::string t = "";
+        infWindow.open();
+        emit create_info(photo, t);
+    }
+}
