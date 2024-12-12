@@ -7,9 +7,9 @@ Start::Start(QWidget *parent) :
 {
     ui->setupUi(this);
     ui->pushButton_3->setVisible(false);
-    ui->lineEdit->setVisible(false);
-    ui->label_3->setVisible(false);
-    ui->lineEdit->setEchoMode(QLineEdit::Password);
+    ui->passwordLine->setVisible(false);
+    ui->wrongPassword->setVisible(false);
+    ui->passwordLine->setEchoMode(QLineEdit::Password);
     w.setWindowTitle("Воздушные суда гражданской авиации");
 
     connect(this, SIGNAL(is_notadmin()), &w, SLOT(check_admin()));
@@ -30,14 +30,14 @@ void Start::on_pushButton_2_clicked()
 void Start::on_pushButton_clicked()
 {
     ui->pushButton_3->setVisible(true);
-    ui->lineEdit->setVisible(true);
+    ui->passwordLine->setVisible(true);
 }
 
 void Start::on_pushButton_3_clicked()
 {
-    std::string str = ui->lineEdit->text().toStdString();
+    std::string str = ui->passwordLine->text().toStdString();
     if(str != "12345"){
-        ui->label_3->setVisible(true);
+        ui->wrongPassword->setVisible(true);
         return;
     }
     this->close();

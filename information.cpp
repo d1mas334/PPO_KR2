@@ -13,8 +13,9 @@ Information::~Information()
     delete ui;
 }
 
-void Information::creating_inf(QPixmap photo, std::string t){
+void Information::creating_inf(QPixmap photo, QString t){
     ui->label->setPixmap(photo.scaled(360, 190));
+    ui->textBrowser->setText(t);
 }
 
 void Information::on_pushButton_clicked()

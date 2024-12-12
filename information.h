@@ -16,7 +16,7 @@ public:
     ~Information();
 
 private slots:
-    void creating_inf(QPixmap photo, std::string t);
+    void creating_inf(QPixmap photo, QString t);
 
     void on_pushButton_clicked();
 

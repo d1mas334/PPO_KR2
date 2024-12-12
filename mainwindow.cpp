@@ -21,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
 
     f.setWindowTitle("Фильтр");
 
+    infWindow.setWindowTitle("Справка о ВС");
+
     connect(this, SIGNAL(filter_create(QSqlDatabase)), &f, SLOT(creating_filter(QSqlDatabase)));
 //    connect(this, &MainWindow::filter_create, &f, &Filter::creating_filter);
 
@@ -33,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
                              std::string, std::string,
                              int, int, int, int)));
 
-    connect(this, SIGNAL(create_info(QPixmap, std::string)), &infWindow, SLOT(creating_inf(QPixmap, std::string)));
+    connect(this, SIGNAL(create_info(QPixmap, QString)), &infWindow, SLOT(creating_inf(QPixmap, QString)));
 }
 
 MainWindow::~MainWindow()
@@ -56,6 +58,8 @@ void MainWindow::on_pushButton_clicked()
 }
 
 void MainWindow::fillingTable(QSqlQuery *q){
+    // self.table.blockSignals(True);
+    ui->tableWidget->blockSignals(true);
     ui->tableWidget->clear();
     ui->tableWidget->setRowCount(0);
     ui->tableWidget->setColumnCount(6); // Указываем число колонок
@@ -97,6 +101,7 @@ void MainWindow::fillingTable(QSqlQuery *q){
     if (i == 0){
         qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65";
     }
+    ui->tableWidget->blockSignals(false);
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
@@ -175,19 +180,56 @@ void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
 
 void MainWindow::on_pushButton_4_clicked()
 {
-    qDebug()<<ui->tableWidget->selectionModel()->currentIndex().row();
     int ind = ui->tableWidget->selectionModel()->currentIndex().row();
     QSqlQuery query = QSqlQuery(db);
     query.exec(QString::fromStdString("SELECT Фото FROM mt1 WHERE id = CONVERT(INT, "
                                                       + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
     QPixmap photo;
     query.first();
-    QByteArray arr;
-    //arr.setRawData(query.value(0), QMetaType::sizeOf(query.value(0).ty));
     if(photo.loadFromData(query.value(0).toByteArray(), "JPG"))
     {
-        std::string t = "";
+        query.exec(QString::fromStdString("SELECT Справка FROM mt1 WHERE id = CONVERT(INT, "
+                                          + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
+        query.first();
+        QString t = query.value(0).toString();
         infWindow.open();
         emit create_info(photo, t);
     }
 }
+
+void MainWindow::on_pushButton_5_clicked()
+{
+//    for(int i = 0; i < ui->tableWidget->rowCount(); i++){
+//        ui->tableWidget->
+//    }
+}
+
+
+void MainWindow::on_tableWidget_cellChanged(int row, int column)
+{
+    std::string str;
+    str = ui->tableWidget->item(row, column)->text().toStdString();
+    qDebug()<<ui->tableWidget->item(row, column)->whatsThis();
+    QSqlQuery query = QSqlQuery(db);
+    std::string columns[] = {"id", "Название", "[Тип ВС]", "Страна", "[Дата начала эксплуатации]", "[Дата окончания эксплуатации]"};
+    //columns = [[id], [Название], [Тип ВС], [Страна], [Дата начала эксплуатации],[Дата окончания эксплуатации]]
+
+    if(column == 0){
+        return;
+    }else if(column == 1 || column == 2 || column == 3){
+        query.exec(QString::fromStdString("UPDATE mt1 "
+                                          "SET " + columns[column] + " = CAST(\'" + str + "\' AS VARCHAR(50)) WHERE id = " + std::to_string(row + 1) + " ;"));
+    }else if(column == 4 || column == 5){
+        if(str == ""){
+            query.exec(QString::fromStdString("UPDATE mt1 "
+                                              "SET " + columns[column] + " = NULL WHERE id = " + std::to_string(row + 1) + " ;"));
+        }
+        else{
+            query.exec(QString::fromStdString("UPDATE mt1 "
+                                              "SET " + columns[column] + " = CAST(\'" + str + "\' AS DATE) WHERE id = " + std::to_string(row + 1) + " ;"));
+        }
+    }
+    query.exec(QString::fromStdString("UPDATE mt1 SET " + columns[column] + " = CAST(" + str + " AS (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'MyTable' AND COLUMN_NAME = 'MyColumn') WHERE id = " + std::to_string(row + 1) + " ;"));
+    qDebug()<<query.lastError();
+}
+
