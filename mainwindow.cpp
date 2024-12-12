@@ -58,6 +58,7 @@ void MainWindow::on_pushButton_clicked()
 
 void MainWindow::fillingTable(QSqlQuery *q){
     // self.table.blockSignals(True);
+    ui->tableWidget->setSortingEnabled(false);
     ui->tableWidget->blockSignals(true);
     ui->tableWidget->clear();
     ui->tableWidget->setRowCount(0);
@@ -98,9 +99,10 @@ void MainWindow::fillingTable(QSqlQuery *q){
         ui->tableWidget->setItem(i,5, new QTableWidgetItem(q->value(5).toString()));
     }
     if (i == 0){
-        qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65";
+        qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65" <<q->lastError();
     }
     ui->tableWidget->blockSignals(false);
+    ui->tableWidget->setSortingEnabled(true);
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1)
@@ -220,7 +222,5 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
                                               "SET " + columns[column] + " = CAST(\'" + str + "\' AS DATE) WHERE id = " + std::to_string(row + 1) + " ;"));
         }
     }
-    query.exec(QString::fromStdString("UPDATE mt1 SET " + columns[column] + " = CAST(" + str + " AS (SELECT DATA_TYPE FROM INFORMATION_SCHEMA.COLUMNS WHERE TABLE_NAME = 'MyTable' AND COLUMN_NAME = 'MyColumn') WHERE id = " + std::to_string(row + 1) + " ;"));
-    qDebug()<<query.lastError();
 }
 

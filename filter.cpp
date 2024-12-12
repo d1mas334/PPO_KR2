@@ -66,9 +66,9 @@ void Filter::on_buttonBox_clicked(QAbstractButton *button)
             ui->label_2->show();
             return;
         }
-        if(ui->comboBox1->currentText().toStdString() == ""){
-            qDebug()<<"filtercpp:69 mistake";
-        }
+//        if(ui->comboBox1->currentText().toStdString() == ""){
+//            qDebug()<<"filtercpp:69 mistake";
+//        }
         emit table_update(ui->titleEdit->text().toStdString(),
                           ui->comboBox1->currentText().toStdString(), ui->yearEdit_7->text().toStdString(),
                           ui->yearEdit_8->text().toStdString(), ui->comboBox2->currentText().toStdString(),
