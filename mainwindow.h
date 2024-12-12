@@ -58,8 +58,6 @@ private slots:
 
     void on_tableWidget_itemClicked(QTableWidgetItem *item);
 
-    void on_pushButton_5_clicked();
-
     void on_tableWidget_cellChanged(int row, int column);
 
 private:

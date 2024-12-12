@@ -24,7 +24,6 @@ MainWindow::MainWindow(QWidget *parent)
     infWindow.setWindowTitle("Справка о ВС");
 
     connect(this, SIGNAL(filter_create(QSqlDatabase)), &f, SLOT(creating_filter(QSqlDatabase)));
-//    connect(this, &MainWindow::filter_create, &f, &Filter::creating_filter);
 
     connect(&f, SIGNAL(table_update(std::string,
                                     std::string, std::string,
@@ -197,13 +196,6 @@ void MainWindow::on_pushButton_4_clicked()
     }
 }
 
-void MainWindow::on_pushButton_5_clicked()
-{
-//    for(int i = 0; i < ui->tableWidget->rowCount(); i++){
-//        ui->tableWidget->
-//    }
-}
-
 
 void MainWindow::on_tableWidget_cellChanged(int row, int column)
 {
@@ -212,7 +204,6 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
     qDebug()<<ui->tableWidget->item(row, column)->whatsThis();
     QSqlQuery query = QSqlQuery(db);
     std::string columns[] = {"id", "Название", "[Тип ВС]", "Страна", "[Дата начала эксплуатации]", "[Дата окончания эксплуатации]"};
-    //columns = [[id], [Название], [Тип ВС], [Страна], [Дата начала эксплуатации],[Дата окончания эксплуатации]]
 
     if(column == 0){
         return;
