@@ -78,7 +78,6 @@ void MainWindow::fillingTable(QSqlQuery *q){
                                                              <<QString::fromStdString("Дата начала эксплуатации")
                                                              <<QString::fromStdString("Дата окончания эксплуатации"));
     // Растягиваем последнюю колонку на всё доступное пространство
-    //ui->tableWidget->horizontalHeader()->setStretchLastSection(true);
     ui->tableWidget->horizontalHeader()->setSectionResizeMode(QHeaderView::ResizeToContents);
     // Скрываем колонку под номером 0
     ui->tableWidget->hideColumn(0);
@@ -203,7 +202,6 @@ void MainWindow::on_tableWidget_cellChanged(int row, int column)
 {
     std::string str;
     str = ui->tableWidget->item(row, column)->text().toStdString();
-    qDebug()<<ui->tableWidget->item(row, column)->whatsThis();
     QSqlQuery query = QSqlQuery(db);
     std::string columns[] = {"id", "Название", "[Тип ВС]", "Страна", "[Дата начала эксплуатации]", "[Дата окончания эксплуатации]"};
 

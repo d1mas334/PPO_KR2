@@ -1,4 +1,5 @@
 #include "filter.h"
+#include "qpushbutton.h"
 #include "ui_filter.h"
 
 Filter::Filter(QWidget *parent) :
@@ -8,7 +9,9 @@ Filter::Filter(QWidget *parent) :
     ui->setupUi(this);
     ui->label_2->setText("<font color=red>Начальный год должен быть меньше или равен конечному году</font>");
     ui->label_2->hide();
-    //ui->buttonBox->
+    ui->buttonBox->button(QDialogButtonBox::Close)->setText("Закрыть");
+    ui->buttonBox->button(QDialogButtonBox::Reset)->setText("Сбросить");
+    ui->buttonBox->button(QDialogButtonBox::Apply)->setText("Применить");
 }
 
 Filter::~Filter()
@@ -57,18 +60,12 @@ void Filter::on_buttonBox_clicked(QAbstractButton *button)
                           0, 0);
     }
 
-    if (button->text() == "Отмена" || button->text() == "Cancel"){
-        this->close();
-    }
 
     if (button->text() == "Применить" || button->text() == "Apply"){
         if(ui->yearEdit_7->text().toInt() > ui->yearEdit_8->text().toInt()){
             ui->label_2->show();
             return;
         }
-//        if(ui->comboBox1->currentText().toStdString() == ""){
-//            qDebug()<<"filtercpp:69 mistake";
-//        }
         emit table_update(ui->titleEdit->text().toStdString(),
                           ui->comboBox1->currentText().toStdString(), ui->yearEdit_7->text().toStdString(),
                           ui->yearEdit_8->text().toStdString(), ui->comboBox2->currentText().toStdString(),
