@@ -3,7 +3,7 @@
 #include "./ui_mainwindow.h"
 #include "start.h"
 
-MainWindow::MainWindow(QWidget *parent)
+MainWindow::MainWindow(QWidget *parent)  // создание основного окна приложения
     : QMainWindow(parent)
     , ui(new Ui::MainWindow)
 {
@@ -38,16 +38,17 @@ MainWindow::MainWindow(QWidget *parent)
     connect(this, SIGNAL(create_info(QPixmap, QString, QString)), &infWindow, SLOT(creating_inf(QPixmap, QString, QString)));
 }
 
-MainWindow::~MainWindow()
+MainWindow::~MainWindow()  // при закрытии основного окна приложения
 {
     delete ui;
 }
 
-void MainWindow::check_admin(){
+void MainWindow::check_admin(){  // если пользователь успешно вошёл как администратор
     admin = false;
     ui->tableWidget->setEditTriggers(QAbstractItemView::NoEditTriggers); // если не админ
 }
 
+// если нажата кнопка "Выход", то переход на стартовое окно
 void MainWindow::on_pushButton_clicked()
 {
     close();
@@ -57,13 +58,13 @@ void MainWindow::on_pushButton_clicked()
     s->show();
 }
 
-void MainWindow::fillingTable(QSqlQuery *q){ // Обновление таблицы
-    ui->tableWidget->setSortingEnabled(false); // Выключение сортировки для сохранения целостности данных
-    ui->tableWidget->blockSignals(true); // Временная деактивация таблицы
-    ui->tableWidget->clear(); // Очистка строк таблицы
-    ui->tableWidget->setRowCount(0); // Обнуление количества строк в таблице
-    ui->tableWidget->setColumnCount(6); // Указываем число колонок
-    ui->tableWidget->setShowGrid(true); // Включаем сетку
+void MainWindow::fillingTable(QSqlQuery *q){  // Обновление таблицы
+    ui->tableWidget->setSortingEnabled(false);  // Выключение сортировки для сохранения целостности данных
+    ui->tableWidget->blockSignals(true);  // Временная деактивация таблицы
+    ui->tableWidget->clear();  // Очистка строк таблицы
+    ui->tableWidget->setRowCount(0);  // Обнуление количества строк в таблице
+    ui->tableWidget->setColumnCount(6);  // Указываем число колонок
+    ui->tableWidget->setShowGrid(true);  // Включаем сетку
     // Разрешаем выделение только одного элемента
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     // Разрешаем выделение построчно
@@ -99,8 +100,8 @@ void MainWindow::fillingTable(QSqlQuery *q){ // Обновление табли�
         qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65" <<q->lastError();
     }
     ui->tableWidget->blockSignals(false);
-    ui->tableWidget->setSortingEnabled(true); // Включение сортировки
-    ui->pushButton_4->setEnabled(false); // Выключение кнопки доп.информации о ВС, т.к. нет выбранного ВС
+    ui->tableWidget->setSortingEnabled(true);  // Включение сортировки
+    ui->pushButton_4->setEnabled(false);  // Выключение кнопки доп.информации о ВС, т.к. нет выбранного ВС
 }
 
 void MainWindow::on_lineEdit_textChanged(const QString &arg1) // если изменена строка поиска по названию ВС
@@ -109,7 +110,7 @@ void MainWindow::on_lineEdit_textChanged(const QString &arg1) // если изм
     updating_table(); // Обновление таблицы
 }
 
-void MainWindow::on_pushButton_3_clicked()
+void MainWindow::on_pushButton_3_clicked()  // создание окна фильтр, если нажата кнопка "Фильтр"
 {
     emit filter_create(db);
     f.show();
@@ -119,7 +120,7 @@ void MainWindow::filter_exec(std::string title1,
                              std::string atype1, std::string yearst1,
                              std::string yearend1, std::string country1,
                              int frmin1, int frmax1,
-                             int pasmin1, int pasmax2){
+                             int pasmin1, int pasmax2){  // получение параметров от окна фильтр
     title = title1;
     atype = atype1;
     if(yearst1 != ""){
@@ -144,6 +145,7 @@ void MainWindow::filter_exec(std::string title1,
     updating_table();
 }
 
+// обновление таблицы, основанное на полученных параметрах фильтрации данных
 void MainWindow::updating_table(){
     QSqlQuery *q = new QSqlQuery();
     q->exec(QString::fromStdString("SELECT [id], [Название], [Тип ВС], [Страна], [Дата начала эксплуатации],"
@@ -164,7 +166,7 @@ void MainWindow::updating_table(){
     fillingTable(q);
 }
 
-
+// изменение выбранного ВС, если пользователь нажал на строку в таблице
 void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
 {
     int ind = item->row();
@@ -178,6 +180,7 @@ void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
     ui->pushButton_4->setEnabled(true);
 }
 
+// вывод окна информации о выбранном ВС, если пользователь нажал на кнопку "Больше информации о ВС"
 void MainWindow::on_pushButton_4_clicked()
 {
     int ind = ui->tableWidget->selectionModel()->currentIndex().row();
@@ -201,7 +204,7 @@ void MainWindow::on_pushButton_4_clicked()
     }
 }
 
-
+// изменение таблицы в базе дыннх, если администратор изменил значение в ячейке таблицы
 void MainWindow::on_tableWidget_cellChanged(int row, int column)
 {
     std::string str;

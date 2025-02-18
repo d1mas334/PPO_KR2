@@ -14,12 +14,12 @@ Filter::Filter(QWidget *parent):
     ui->buttonBox->button(QDialogButtonBox::Apply)->setText("Применить");
 }
 
-Filter::~Filter()
+Filter::~Filter()  // при закрытии окна фильтра
 {
     delete ui;
 }
 
-void Filter::creating_filter(QSqlDatabase q){
+void Filter::creating_filter(QSqlDatabase q){  // создание окна фильтра
     QStringList str;
     str<<"";
     QSqlQuery query = QSqlQuery(q);
@@ -41,7 +41,7 @@ void Filter::creating_filter(QSqlDatabase q){
 }
 
 
-void Filter::on_buttonBox_clicked(QAbstractButton *button)
+void Filter::on_buttonBox_clicked(QAbstractButton *button)  // при нажатии на одну из кнопок внизу окна фильтра
 {
     if (button->text() == "Закрыть" || button->text() == "Close"){
         this->close();
