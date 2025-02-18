@@ -27,7 +27,7 @@ public:
 
 signals:
     void filter_create(QSqlDatabase q);
-    void create_info(QPixmap photo, QString t);
+    void create_info(QPixmap photo, QString t, QString info_title);
 //    //void itemChanged (QTableView *item);
 //    bool eventFilter(QObject *obj, QEvent *evt);
 

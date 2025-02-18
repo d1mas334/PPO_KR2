@@ -1,3 +1,4 @@
+// добавить титульник к справке
 #include "mainwindow.h"
 #include "./ui_mainwindow.h"
 #include "start.h"
@@ -34,7 +35,7 @@ MainWindow::MainWindow(QWidget *parent)
                              std::string, std::string,
                              int, int, int, int)));
 
-    connect(this, SIGNAL(create_info(QPixmap, QString)), &infWindow, SLOT(creating_inf(QPixmap, QString)));
+    connect(this, SIGNAL(create_info(QPixmap, QString, QString)), &infWindow, SLOT(creating_inf(QPixmap, QString, QString)));
 }
 
 MainWindow::~MainWindow()
@@ -56,20 +57,17 @@ void MainWindow::on_pushButton_clicked()
     s->show();
 }
 
-void MainWindow::fillingTable(QSqlQuery *q){
-    // self.table.blockSignals(True);
-    ui->tableWidget->setSortingEnabled(false);
-    ui->tableWidget->blockSignals(true);
-    ui->tableWidget->clear();
-    ui->tableWidget->setRowCount(0);
+void MainWindow::fillingTable(QSqlQuery *q){ // Обновление таблицы
+    ui->tableWidget->setSortingEnabled(false); // Выключение сортировки для сохранения целостности данных
+    ui->tableWidget->blockSignals(true); // Временная деактивация таблицы
+    ui->tableWidget->clear(); // Очистка строк таблицы
+    ui->tableWidget->setRowCount(0); // Обнуление количества строк в таблице
     ui->tableWidget->setColumnCount(6); // Указываем число колонок
     ui->tableWidget->setShowGrid(true); // Включаем сетку
     // Разрешаем выделение только одного элемента
     ui->tableWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     // Разрешаем выделение построчно
     ui->tableWidget->setSelectionBehavior(QAbstractItemView::SelectRows);
-    // Устанавливаем заголовки колонок
-    //QStringList headers;
 
     ui->tableWidget->setHorizontalHeaderLabels(QStringList()<<QString::fromStdString("id")
                                                              <<QString::fromStdString("Название")
@@ -82,7 +80,7 @@ void MainWindow::fillingTable(QSqlQuery *q){
     // Скрываем колонку под номером 0
     ui->tableWidget->hideColumn(0);
     int i = 0;
-    for(/*int*/ i = 0; q->next(); i++){
+    for(i = 0; q->next(); i++){
         // Вставляем строку
         ui->tableWidget->insertRow(i);
         /* Устанавливаем в первую колонку id забирая его из результата SQL-запроса
@@ -101,13 +99,14 @@ void MainWindow::fillingTable(QSqlQuery *q){
         qDebug()<<"Mistake in MainWindow::fillingTable(mytrigger, mainWindow.h:65" <<q->lastError();
     }
     ui->tableWidget->blockSignals(false);
-    ui->tableWidget->setSortingEnabled(true);
+    ui->tableWidget->setSortingEnabled(true); // Включение сортировки
+    ui->pushButton_4->setEnabled(false); // Выключение кнопки доп.информации о ВС, т.к. нет выбранного ВС
 }
 
-void MainWindow::on_lineEdit_textChanged(const QString &arg1)
+void MainWindow::on_lineEdit_textChanged(const QString &arg1) // если изменена строка поиска по названию ВС
 {
-    title = ui->lineEdit->text().toStdString();
-    updating_table();
+    title = ui->lineEdit->text().toStdString(); // Запись искомого названия ВС
+    updating_table(); // Обновление таблицы
 }
 
 void MainWindow::on_pushButton_3_clicked()
@@ -153,7 +152,7 @@ void MainWindow::updating_table(){
                                                      "[Тип ВС] LIKE(\'" + atype + "%\') AND "
                                                      "[Страна] LIKE(\'" + country + "%\')"
                                            " AND (YEAR([Дата начала эксплуатации]) BETWEEN " + yearst + " AND " + yearend + " OR"
-                                                                                                                                                     " YEAR([Дата окончания эксплуатации]) BETWEEN " + yearst + " AND " + yearend + " OR"
+                                            " YEAR([Дата окончания эксплуатации]) BETWEEN " + yearst + " AND " + yearend + " OR"
                                            " " + yearst + " BETWEEN YEAR([Дата начала эксплуатации]) AND YEAR([Дата окончания эксплуатации]) OR"
                                                           " " + yearend + " BETWEEN YEAR([Дата начала эксплуатации]) AND YEAR([Дата окончания эксплуатации]) OR"
                                                        " YEAR([Дата окончания эксплуатации]) IS NULL AND"
@@ -176,6 +175,7 @@ void MainWindow::on_tableWidget_itemClicked(QTableWidgetItem *item)
     query.first();
     str = query.value(0).toString();
     ui->label_2->setText(str);
+    ui->pushButton_4->setEnabled(true);
 }
 
 void MainWindow::on_pushButton_4_clicked()
@@ -192,8 +192,12 @@ void MainWindow::on_pushButton_4_clicked()
                                           + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
         query.first();
         QString t = query.value(0).toString();
+        query.exec(QString::fromStdString("SELECT Название FROM mt1 WHERE id = CONVERT(INT, "
+                                          + ui->tableWidget->item(ind, 0)->text().toStdString() + ");"));
+        query.first();
+        QString info_title = query.value(0).toString();
         infWindow.open();
-        emit create_info(photo, t);
+        emit create_info(photo, t, info_title);
     }
 }
 

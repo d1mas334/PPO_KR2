@@ -16,7 +16,7 @@ public:
     ~Information();
 
 private slots:
-    void creating_inf(QPixmap photo, QString t);
+    void creating_inf(QPixmap photo, QString t, QString info_title);
 
     void on_pushButton_clicked();
 

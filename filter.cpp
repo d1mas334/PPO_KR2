@@ -2,7 +2,7 @@
 #include "qpushbutton.h"
 #include "ui_filter.h"
 
-Filter::Filter(QWidget *parent) :
+Filter::Filter(QWidget *parent):
     QDialog(parent),
     ui(new Ui::Filter)
 {
