@@ -28,8 +28,7 @@ public:
 signals:
     void filter_create(QSqlDatabase q);
     void create_info(QPixmap photo, QString t, QString info_title);
-//    //void itemChanged (QTableView *item);
-//    bool eventFilter(QObject *obj, QEvent *evt);
+
 
 private slots:
     void fillingTable(QSqlQuery *q);
@@ -46,15 +45,11 @@ private slots:
 
     void on_pushButton_clicked();
 
-//    void on_tableView_clicked(const QModelIndex &index);
-
     void on_pushButton_3_clicked();
 
     void on_lineEdit_textChanged(const QString &arg1);
 
     void on_pushButton_4_clicked();
-
-//    void on_tableWidget_itemChanged(QTableWidgetItem *item);
 
     void on_tableWidget_itemClicked(QTableWidgetItem *item);
 
